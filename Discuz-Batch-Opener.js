@@ -19,7 +19,15 @@
     let lastSelectedIndex = -1;
 
     // 获取所有可点击的链接元素
-    const clickableLinks = document.querySelectorAll('a[href]'); // 修改选择器以匹配所有可点击的链接
+    const clickableLinks = Array.from(document.querySelectorAll('a[href]')).filter(link => {
+        const text = link.textContent.trim();
+        // 检查是否为纯数字或纯英文字母
+        const isPureNumeric = /^\d+$/.test(text);
+        const isPureAlphabetic = /^[a-zA-Z]+$/.test(text);
+        // 检查是否为时间格式
+        const isTimeFormat = /\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}:\d{2}\b/.test(text);
+        return text.length > 15 && !isPureNumeric && !isPureAlphabetic && !isTimeFormat;
+    });
 
     // 添加点击事件监听
     clickableLinks.forEach((link, index) => {
