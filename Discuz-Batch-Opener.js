@@ -1,12 +1,10 @@
 // ==UserScript==
-// @name         Discuz! 论坛多选帖子并批量打开工具
+// @name         多选帖子并批量打开工具
 // @namespace    http://tampermonkey.net/
-// @version      0.9
-// @description  在 Discuz! 论坛中多选帖子并批量打开
+// @version      测试版 // 修改版本号
+// @description  在任何网页中多选帖子并批量打开
 // @author       黄萌萌可爱多
-// @match        *://*/*forum-*
-// @match        *://*/*forum.php
-// @match        *://*/*thread-*
+// @match        *://*/*
 // @grant        none
 // ==/UserScript==
 
@@ -20,19 +18,13 @@
     // 存储最后一次选中的帖子索引
     let lastSelectedIndex = -1;
 
-    // 获取所有帖子标题的元素，Discuz! 论坛的帖子标题通常在 <a> 标签中
-    const postTitles = document.querySelectorAll('.s.xst'); // 修改选择器以匹配正确的类名
-    // 添加页面加载时的验证逻辑
-    if (!document.querySelector('.xst')) {
-        // 如果页面中没有找到 .xst 类名的元素，则认为不是 Discuz! 论坛页面
-        console.log('This is not a Discuz! forum page.');
-        return;
-    }
+    // 获取所有可点击的链接元素
+    const clickableLinks = document.querySelectorAll('a[href]'); // 修改选择器以匹配所有可点击的链接
 
     // 添加点击事件监听
-    postTitles.forEach((title, index) => {
-        title.addEventListener('click', function(event) {
-            const postLink = this.href; // 获取帖子链接
+    clickableLinks.forEach((link, index) => {
+        link.addEventListener('click', function(event) {
+            const postLink = this.href; // 获取链接
 
             // 检查是否按下了 Ctrl 键
             if (event.ctrlKey) {
@@ -49,10 +41,10 @@
             else if (event.shiftKey) {
                 event.preventDefault(); // 阻止默认的链接跳转行为
                 if (firstSelectedIndex === -1) {
-                    // 如果是第一次按下 Shift 键，记录第一个选中的帖子索引
+                    // 如果是第一次按下 Shift 键，记录第一个选中的链接索引
                     firstSelectedIndex = index;
                 }
-                // 更新最后一个选中的帖子索引
+                // 更新最后一个选中的链接索引
                 lastSelectedIndex = index;
 
                 // 确定选择范围
@@ -61,12 +53,12 @@
 
                 // 清空之前的选中状态
                 selectedPosts = [];
-                postTitles.forEach(t => t.classList.remove('selected'));
+                clickableLinks.forEach(l => l.classList.remove('selected'));
 
-                // 选择范围内的所有帖子
+                // 选择范围内的所有链接
                 for (let i = startIndex; i <= endIndex; i++) {
-                    selectedPosts.push(postTitles[i].href);
-                    postTitles[i].classList.add('selected');
+                    selectedPosts.push(clickableLinks[i].href);
+                    clickableLinks[i].classList.add('selected');
                 }
             }
             // 如果已经有选中的链接，并且再次点击任意一条被选择的链接
@@ -76,9 +68,9 @@
                     window.open(link, '_blank', 'noopener,noreferrer'); // 确保打开新标签页但不切换焦点且静默打开
                 });
                 selectedPosts = []; // 清空选中列表
-                postTitles.forEach(title => title.classList.remove('selected'));
-                firstSelectedIndex = -1; // 重置第一次选中的帖子索引
-                lastSelectedIndex = -1; // 重置最后一次选中的帖子索引
+                clickableLinks.forEach(link => link.classList.remove('selected'));
+                firstSelectedIndex = -1; // 重置第一次选中的链接索引
+                lastSelectedIndex = -1; // 重置最后一次选中的链接索引
             }
         });
     });
@@ -86,18 +78,18 @@
     // 监听点击页面非链接位置的事件
     document.addEventListener('click', function(event) {
         // 检查点击的是否是非链接位置
-        if (!event.target.closest('.xst')) {
+        if (!event.target.closest('a[href]')) {
             // 清空选中列表
             selectedPosts = [];
-            postTitles.forEach(title => title.classList.remove('selected'));
-            firstSelectedIndex = -1; // 重置第一次选中的帖子索引
-            lastSelectedIndex = -1; // 重置最后一次选中的帖子索引
+            clickableLinks.forEach(link => link.classList.remove('selected'));
+            firstSelectedIndex = -1; // 重置第一次选中的链接索引
+            lastSelectedIndex = -1; // 重置最后一次选中的链接索引
         }
     });
 
     // 创建批量打开按钮
     const openButton = document.createElement('button');
-    openButton.textContent = '批量打开选中的帖子';
+    openButton.textContent = '批量打开选中的链接';
     openButton.style.position = 'fixed';
     openButton.style.top = '10px';
     openButton.style.right = '10px';
@@ -116,9 +108,9 @@
             window.open(link, '_blank', 'noopener,noreferrer'); // 确保打开新标签页但不切换焦点且静默打开
         });
         selectedPosts = []; // 清空选中列表
-        postTitles.forEach(title => title.classList.remove('selected'));
-        firstSelectedIndex = -1; // 重置第一次选中的帖子索引
-        lastSelectedIndex = -1; // 重置最后一次选中的帖子索引
+        clickableLinks.forEach(link => link.classList.remove('selected'));
+        firstSelectedIndex = -1; // 重置第一次选中的链接索引
+        lastSelectedIndex = -1; // 重置最后一次选中的链接索引
         window.focus(); // 确保当前窗口保持焦点
     });
 
@@ -140,9 +132,9 @@
     // 添加清除选择按钮点击事件
     clearButton.addEventListener('click', function() {
         selectedPosts = []; // 清空选中列表
-        postTitles.forEach(title => title.classList.remove('selected'));
-        firstSelectedIndex = -1; // 重置第一次选中的帖子索引
-        lastSelectedIndex = -1; // 重置最后一次选中的帖子索引
+        clickableLinks.forEach(link => link.classList.remove('selected'));
+        firstSelectedIndex = -1; // 重置第一次选中的链接索引
+        lastSelectedIndex = -1; // 重置最后一次选中的链接索引
     });
 
     // 创建使用说明按钮
@@ -184,10 +176,10 @@
 
         // 添加使用说明的各个点
         const points = [
-            '第一次在某个论坛使用批量打开网页功能时，需要手动关闭网页的阻止弹窗。',
-            '按住 Ctrl 键并点击多个帖子标题以多选帖子。',
-            '按住 Shift 键并点击帖子标题以选择范围内的帖子。',
-            '（快捷）当选择有链接时，再次点击任意一条链接即可全部打开。点击空白处即可取消选择全部链接帖子。',
+            '第一次在某个网页使用批量打开功能时，需要手动关闭网页的阻止弹窗。',
+            '按住 Ctrl 键并点击多个链接以多选链接。',
+            '按住 Shift 键并点击链接以选择范围内的链接。',
+            '（快捷）当选择有链接时，再次点击任意一条链接即可全部打开。点击空白处即可取消选择全部链接。',
             '链接选择的逻辑参照 Windows 文件管理器。'
         ];
 
@@ -205,7 +197,7 @@
         helpBox.appendChild(authorInfo);
 
         const versionInfo = document.createElement('p');
-        versionInfo.textContent = '版本: 0.9';
+        versionInfo.textContent = '版本: 测试版'; // 修改版本号
         versionInfo.style.marginBottom = '10px';
         helpBox.appendChild(versionInfo);
 
@@ -242,7 +234,7 @@
     // 添加选中样式
     const style = document.createElement('style');
     style.textContent = `
-        .xst.selected {
+        a.selected {
             background-color: #87CEEB; // 修改选中颜色为天蓝色
         }
     `;
