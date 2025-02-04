@@ -5,7 +5,7 @@
 // @description  在 Discuz! 论坛中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*forum-*
-// @match        *://*/*forum.php
+// @match        *://*/*forum.php*
 // @match        *://*/*thread-*
 // @grant        none
 // ==/UserScript==
