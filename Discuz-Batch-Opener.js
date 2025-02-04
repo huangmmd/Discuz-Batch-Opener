@@ -169,7 +169,6 @@
         helpBox.style.top = '100px'; // 调整悬浮框的顶部位置
         helpBox.style.right = '60px'; // 调整悬浮框的右侧位置，避免被关闭按钮遮挡
         helpBox.style.width = '300px';
-        helpBox.style.height = '200px';
         helpBox.style.backgroundColor = 'white';
         helpBox.style.border = '1px solid #ccc';
         helpBox.style.zIndex = '10000';
@@ -205,7 +204,7 @@
         helpBox.appendChild(authorInfo);
 
         const versionInfo = document.createElement('p');
-        versionInfo.textContent = '版本: 0.7';
+        versionInfo.textContent = '版本: 0.9'; // 更新版本号
         versionInfo.style.marginBottom = '10px';
         helpBox.appendChild(versionInfo);
 
