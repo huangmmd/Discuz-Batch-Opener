@@ -5,6 +5,8 @@
 // @description  在 Discuz! 论坛中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*forum-*
+// @match        *://*/*forum.php
+// @match        *://*/*thread-*
 // @grant        none
 // ==/UserScript==
 
@@ -19,7 +21,7 @@
     let lastSelectedIndex = -1;
 
     // 获取所有帖子标题的元素，Discuz! 论坛的帖子标题通常在 <a> 标签中
-    const postTitles = document.querySelectorAll('.xst'); // .xst 是 Discuz! 论坛帖子标题的常见类名
+    const postTitles = document.querySelectorAll('.s.xst'); // 修改选择器以匹配正确的类名
 
     // 添加页面加载时的验证逻辑
     if (!document.querySelector('.xst')) {
@@ -72,7 +74,7 @@
             else if (selectedPosts.includes(postLink)) {
                 event.preventDefault(); // 阻止默认的链接跳转行为
                 selectedPosts.forEach(link => {
-                    window.open(link, '_blank');
+                    window.open(link, '_blank', 'noopener,noreferrer'); // 确保打开新标签页但不切换焦点且静默打开
                 });
                 selectedPosts = []; // 清空选中列表
                 postTitles.forEach(title => title.classList.remove('selected'));
