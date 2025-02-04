@@ -167,8 +167,8 @@
         helpBox.style.position = 'fixed';
         helpBox.style.top = '100px'; // 调整悬浮框的顶部位置
         helpBox.style.right = '60px'; // 调整悬浮框的右侧位置，避免被关闭按钮遮挡
-        helpBox.style.width = '300px';
-        helpBox.style.height = '200px';
+        helpBox.style.width = '300px'; // 修改悬浮框的宽度
+        helpBox.style.height = '300px'; // 修改悬浮框的高度
         helpBox.style.backgroundColor = 'white';
         helpBox.style.border = '1px solid #ccc';
         helpBox.style.zIndex = '10000';
