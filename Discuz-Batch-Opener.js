@@ -1,10 +1,12 @@
 // ==UserScript==
-// @name         论坛多选帖子并批量打开工具
+// @name         Discuz! 论坛多选帖子并批量打开工具
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  在论坛中多选帖子并批量打开
+// @version      0.9
+// @description  在 Discuz! 论坛中多选帖子并批量打开
 // @author       黄萌萌可爱多
-// @match        *://*/*
+// @match        *://*/*forum-*
+// @match        *://*/*forum.php
+// @match        *://*/*thread-*
 // @grant        none
 // ==/UserScript==
 
@@ -19,8 +21,7 @@
     let lastSelectedIndex = -1;
 
     // 获取所有帖子标题的元素，Discuz! 论坛的帖子标题通常在 <a> 标签中
-    const postTitles = document.querySelectorAll('.s.xst, a[href]'); // 修改选择器以匹配 .s.xst 和 href 标签
-
+    const postTitles = document.querySelectorAll('.s.xst'); // 修改选择器以匹配正确的类名
     // 添加页面加载时的验证逻辑
     if (!document.querySelector('.xst')) {
         // 如果页面中没有找到 .xst 类名的元素，则认为不是 Discuz! 论坛页面
@@ -167,6 +168,7 @@
         helpBox.style.top = '100px'; // 调整悬浮框的顶部位置
         helpBox.style.right = '60px'; // 调整悬浮框的右侧位置，避免被关闭按钮遮挡
         helpBox.style.width = '300px';
+        helpBox.style.height = '200px';
         helpBox.style.backgroundColor = 'white';
         helpBox.style.border = '1px solid #ccc';
         helpBox.style.zIndex = '10000';
@@ -203,7 +205,7 @@
         helpBox.appendChild(authorInfo);
 
         const versionInfo = document.createElement('p');
-        versionInfo.textContent = '版本: 1.0'; // 更新版本号
+        versionInfo.textContent = '版本: 0.9';
         versionInfo.style.marginBottom = '10px';
         helpBox.appendChild(versionInfo);
 
