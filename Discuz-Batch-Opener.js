@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Discuz! 论坛多选帖子并批量打开工具
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      1.0
 // @description  在 Discuz! 论坛中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*
@@ -19,7 +19,7 @@
     let lastSelectedIndex = -1;
 
     // 获取所有帖子标题的元素，Discuz! 论坛的帖子标题通常在 <a> 标签中
-    const postTitles = document.querySelectorAll('.s.xst'); // 修改选择器以匹配正确的类名
+    const postTitles = document.querySelectorAll('.s.xst, a[href]'); // 修改选择器以匹配 .s.xst 和 href 标签
 
     // 添加页面加载时的验证逻辑
     if (!document.querySelector('.xst')) {
@@ -202,7 +202,7 @@
         helpBox.appendChild(authorInfo);
 
         const versionInfo = document.createElement('p');
-        versionInfo.textContent = '版本: 0.9'; // 更新版本号
+        versionInfo.textContent = '版本: 1.0'; // 更新版本号
         versionInfo.style.marginBottom = '10px';
         helpBox.appendChild(versionInfo);
 
