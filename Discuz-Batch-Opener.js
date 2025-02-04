@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Discuz! 论坛多选帖子并批量打开工具
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  在 Discuz! 论坛中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*forum-*
