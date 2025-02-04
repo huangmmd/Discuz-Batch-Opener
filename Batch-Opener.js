@@ -239,10 +239,61 @@
         document.body.appendChild(helpBox);
     });
 
+    // 创建隐藏按钮
+    const hideButton = document.createElement('button');
+    hideButton.textContent = '隐藏';
+    hideButton.style.position = 'fixed';
+    hideButton.style.top = '130px'; // 调整隐藏按钮的顶部位置
+    hideButton.style.right = '10px';
+    hideButton.style.zIndex = '9999';
+    hideButton.style.padding = '10px 20px';
+    hideButton.style.backgroundColor = '#9E9E9E';
+    hideButton.style.color = 'white';
+    hideButton.style.border = 'none';
+    hideButton.style.borderRadius = '5px';
+    hideButton.style.cursor = 'pointer';
+    hideButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
+
+    // 添加隐藏按钮点击事件
+    hideButton.addEventListener('click', function() {
+        openButton.style.display = 'none';
+        clearButton.style.display = 'none';
+        helpButton.style.display = 'none';
+        hideButton.style.display = 'none';
+        expandButton.style.display = 'block';
+    });
+
+    // 创建展开按钮
+    const expandButton = document.createElement('button');
+    expandButton.textContent = '展开';
+    expandButton.style.position = 'fixed';
+    expandButton.style.top = '130px'; // 调整展开按钮的顶部位置
+    expandButton.style.right = '10px';
+    expandButton.style.zIndex = '9999';
+    expandButton.style.padding = '10px 20px';
+    expandButton.style.backgroundColor = '#673AB7';
+    expandButton.style.color = 'white';
+    expandButton.style.border = 'none';
+    expandButton.style.borderRadius = '5px';
+    expandButton.style.cursor = 'pointer';
+    expandButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
+    expandButton.style.display = 'none'; // 默认隐藏展开按钮
+
+    // 添加展开按钮点击事件
+    expandButton.addEventListener('click', function() {
+        openButton.style.display = 'block';
+        clearButton.style.display = 'block';
+        helpButton.style.display = 'block';
+        hideButton.style.display = 'block';
+        expandButton.style.display = 'none';
+    });
+
     // 将按钮添加到页面
     document.body.appendChild(openButton);
     document.body.appendChild(clearButton);
     document.body.appendChild(helpButton);
+    document.body.appendChild(hideButton);
+    document.body.appendChild(expandButton);
 
     // 添加选中样式
     const style = document.createElement('style');
