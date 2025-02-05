@@ -5,7 +5,11 @@
 // @description  在任何网页中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*
-// @grant        none
+// @grant        GM_addValueChangeListener
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
+// @run-at       document-end
 // ==/UserScript==
 
 (function() {
@@ -239,61 +243,10 @@
         document.body.appendChild(helpBox);
     });
 
-    // 创建隐藏按钮
-    const hideButton = document.createElement('button');
-    hideButton.textContent = '隐藏';
-    hideButton.style.position = 'fixed';
-    hideButton.style.top = '130px'; // 调整隐藏按钮的顶部位置
-    hideButton.style.right = '10px';
-    hideButton.style.zIndex = '9999';
-    hideButton.style.padding = '10px 20px';
-    hideButton.style.backgroundColor = '#9E9E9E';
-    hideButton.style.color = 'white';
-    hideButton.style.border = 'none';
-    hideButton.style.borderRadius = '5px';
-    hideButton.style.cursor = 'pointer';
-    hideButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
-
-    // 添加隐藏按钮点击事件
-    hideButton.addEventListener('click', function() {
-        openButton.style.display = 'none';
-        clearButton.style.display = 'none';
-        helpButton.style.display = 'none';
-        hideButton.style.display = 'none';
-        expandButton.style.display = 'block';
-    });
-
-    // 创建展开按钮
-    const expandButton = document.createElement('button');
-    expandButton.textContent = '展开';
-    expandButton.style.position = 'fixed';
-    expandButton.style.top = '130px'; // 调整展开按钮的顶部位置
-    expandButton.style.right = '10px';
-    expandButton.style.zIndex = '9999';
-    expandButton.style.padding = '10px 20px';
-    expandButton.style.backgroundColor = '#673AB7';
-    expandButton.style.color = 'white';
-    expandButton.style.border = 'none';
-    expandButton.style.borderRadius = '5px';
-    expandButton.style.cursor = 'pointer';
-    expandButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
-    expandButton.style.display = 'none'; // 默认隐藏展开按钮
-
-    // 添加展开按钮点击事件
-    expandButton.addEventListener('click', function() {
-        openButton.style.display = 'block';
-        clearButton.style.display = 'block';
-        helpButton.style.display = 'block';
-        hideButton.style.display = 'block';
-        expandButton.style.display = 'none';
-    });
-
     // 将按钮添加到页面
     document.body.appendChild(openButton);
     document.body.appendChild(clearButton);
     document.body.appendChild(helpButton);
-    document.body.appendChild(hideButton);
-    document.body.appendChild(expandButton);
 
     // 添加选中样式
     const style = document.createElement('style');
@@ -303,4 +256,79 @@
         }
     `;
     document.head.appendChild(style);
+
+    // 获取 hideButtons 的初始值并设置按钮的显示状态
+    const hideButtons = GM_getValue('hideButtons', false);
+    openButton.style.display = hideButtons ? 'none' : 'block';
+    clearButton.style.display = hideButtons ? 'none' : 'block';
+    helpButton.style.display = hideButtons ? 'none' : 'block';
+
+    // 添加油猴设置菜单项
+    GM_addValueChangeListener('hideButtons', (name, oldValue, newValue) => {
+        openButton.style.display = newValue ? 'none' : 'block';
+        clearButton.style.display = newValue ? 'none' : 'block';
+        helpButton.style.display = newValue ? 'none' : 'block';
+    });
+
+    GM_registerMenuCommand('⚙️ 设置', () => {
+        // 创建设置弹窗
+        const settingsBox = document.createElement('div');
+        settingsBox.style.position = 'fixed';
+        settingsBox.style.top = '50%';
+        settingsBox.style.left = '50%';
+        settingsBox.style.transform = 'translate(-50%, -50%)';
+        settingsBox.style.width = '300px';
+        settingsBox.style.height = '150px';
+        settingsBox.style.backgroundColor = 'white';
+        settingsBox.style.border = '1px solid #ccc';
+        settingsBox.style.zIndex = '10000';
+        settingsBox.style.padding = '20px';
+        settingsBox.style.boxShadow = '5px 5px 10px rgba(0, 0, 0, 0.3)';
+        settingsBox.style.borderRadius = '5px';
+        settingsBox.style.fontFamily = 'Arial, sans-serif';
+
+        // 添加设置内容
+        const settingsContent = document.createElement('div');
+        settingsContent.style.margin = '0 0 10px 0';
+
+        // 添加“隐藏悬浮按钮”文本和开关
+        const hideButtonsLabel = document.createElement('label');
+        hideButtonsLabel.textContent = '隐藏悬浮按钮';
+        hideButtonsLabel.style.marginRight = '10px';
+
+        const hideButtonsSwitch = document.createElement('input');
+        hideButtonsSwitch.type = 'checkbox';
+        hideButtonsSwitch.checked = GM_getValue('hideButtons', false);
+        hideButtonsSwitch.addEventListener('change', () => {
+            GM_setValue('hideButtons', hideButtonsSwitch.checked);
+        });
+
+        settingsContent.appendChild(hideButtonsLabel);
+        settingsContent.appendChild(hideButtonsSwitch);
+
+        // 添加关闭按钮
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '关闭';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '10px';
+        closeButton.style.right = '10px';
+        closeButton.style.padding = '5px 10px';
+        closeButton.style.backgroundColor = '#f44336';
+        closeButton.style.color = 'white';
+        closeButton.style.border = 'none';
+        closeButton.style.borderRadius = '3px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
+        closeButton.addEventListener('click', function() {
+            document.body.removeChild(settingsBox);
+        });
+
+        // 将内容和关闭按钮添加到设置弹窗
+        settingsBox.appendChild(settingsContent);
+        settingsBox.appendChild(closeButton);
+
+        // 将设置弹窗添加到页面
+        document.body.appendChild(settingsBox);
+    });
+
 })();
