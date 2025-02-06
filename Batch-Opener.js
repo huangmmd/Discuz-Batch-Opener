@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛帖子批量选择小助手
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.0T
 // @description  在任何网页中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*
