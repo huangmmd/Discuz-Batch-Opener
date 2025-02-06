@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  在任何网页中多选帖子并批量打开
-// @author       黄萌萌可爱多
+// @author       黄萌萌可爱多.
 // @match        *://*/*
 // @license           MIT
 // @grant        GM_addValueChangeListener
