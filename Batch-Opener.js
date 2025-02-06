@@ -5,11 +5,14 @@
 // @description  在任何网页中多选帖子并批量打开
 // @author       黄萌萌可爱多
 // @match        *://*/*
+// @license           MIT
 // @grant        GM_addValueChangeListener
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
 // @run-at       document-end
+// @downloadURL https://update.greasyfork.org/scripts/525999/%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E6%89%B9%E9%87%8F%E9%80%89%E6%8B%A9%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/525999/%E8%AE%BA%E5%9D%9B%E5%B8%96%E5%AD%90%E6%89%B9%E9%87%8F%E9%80%89%E6%8B%A9%E5%B0%8F%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
 (function() {
@@ -154,99 +157,9 @@
         lastSelectedIndex = -1; // 重置最后一次选中的链接索引
     });
 
-    // 创建使用说明按钮
-    const helpButton = document.createElement('button');
-    helpButton.textContent = '使用说明';
-    helpButton.style.position = 'fixed';
-    helpButton.style.top = '90px';
-    helpButton.style.right = '10px';
-    helpButton.style.zIndex = '9999';
-    helpButton.style.padding = '10px 20px';
-    helpButton.style.backgroundColor = '#2196F3';
-    helpButton.style.color = 'white';
-    helpButton.style.border = 'none';
-    helpButton.style.borderRadius = '5px';
-    helpButton.style.cursor = 'pointer';
-    helpButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
-
-    // 添加使用说明按钮点击事件
-    helpButton.addEventListener('click', function() {
-        // 创建悬浮框
-        const helpBox = document.createElement('div');
-        helpBox.style.position = 'fixed';
-        helpBox.style.top = '100px'; // 调整悬浮框的顶部位置
-        helpBox.style.right = '60px'; // 调整悬浮框的右侧位置，避免被关闭按钮遮挡
-        helpBox.style.width = '300px'; // 修改悬浮框宽度
-        helpBox.style.height = '300px'; // 修改悬浮框高度
-        helpBox.style.backgroundColor = 'white';
-        helpBox.style.border = '1px solid #ccc';
-        helpBox.style.zIndex = '10000';
-        helpBox.style.padding = '20px';
-        helpBox.style.boxShadow = '5px 5px 10px rgba(0, 0, 0, 0.3)';
-        helpBox.style.borderRadius = '5px';
-        helpBox.style.fontFamily = 'Arial, sans-serif';
-
-        // 添加使用说明内容
-        const helpContent = document.createElement('ol'); // 使用 <ol> 标签来有序排列
-        helpContent.style.margin = '0 0 10px 0';
-        helpContent.style.paddingLeft = '20px';
-
-        // 添加使用说明的各个点
-        const points = [
-            '第一次在某个网页使用批量打开功能时，需要手动关闭网页的阻止弹窗。',
-            '按住 Ctrl 键并点击多个链接以多选链接。',
-            '按住 Shift 键并点击链接以选择范围内的链接。',
-            '（快捷）当选择有链接时，再次点击任意一条链接即可全部打开。点击空白处即可取消选择全部链接。',
-            '链接选择的逻辑参照 Windows 文件管理器。'
-        ];
-
-        points.forEach(point => {
-            const li = document.createElement('li');
-            li.textContent = point;
-            li.style.marginBottom = '10px'; // 增加间距
-            helpContent.appendChild(li);
-        });
-
-        // 添加作者信息和版本号
-        const authorInfo = document.createElement('p');
-        authorInfo.textContent = '作者: 黄萌萌可爱多';
-        authorInfo.style.marginBottom = '10px';
-        helpBox.appendChild(authorInfo);
-
-        const versionInfo = document.createElement('p');
-        versionInfo.textContent = '版本: 1.0'; // 修改版本号
-        versionInfo.style.marginBottom = '10px';
-        helpBox.appendChild(versionInfo);
-
-        // 添加关闭按钮
-        const closeButton = document.createElement('button');
-        closeButton.textContent = '关闭';
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
-        closeButton.style.padding = '5px 10px';
-        closeButton.style.backgroundColor = '#f44336';
-        closeButton.style.color = 'white';
-        closeButton.style.border = 'none';
-        closeButton.style.borderRadius = '3px';
-        closeButton.style.cursor = 'pointer';
-        closeButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
-        closeButton.addEventListener('click', function() {
-            document.body.removeChild(helpBox);
-        });
-
-        // 将内容和关闭按钮添加到悬浮框
-        helpBox.appendChild(helpContent);
-        helpBox.appendChild(closeButton);
-
-        // 将悬浮框添加到页面
-        document.body.appendChild(helpBox);
-    });
-
     // 将按钮添加到页面
     document.body.appendChild(openButton);
     document.body.appendChild(clearButton);
-    document.body.appendChild(helpButton);
 
     // 添加选中样式
     const style = document.createElement('style');
@@ -261,71 +174,44 @@
     const hideButtons = GM_getValue('hideButtons', false);
     openButton.style.display = hideButtons ? 'none' : 'block';
     clearButton.style.display = hideButtons ? 'none' : 'block';
-    helpButton.style.display = hideButtons ? 'none' : 'block';
 
     // 添加油猴设置菜单项
     GM_addValueChangeListener('hideButtons', (name, oldValue, newValue) => {
         openButton.style.display = newValue ? 'none' : 'block';
         clearButton.style.display = newValue ? 'none' : 'block';
-        helpButton.style.display = newValue ? 'none' : 'block';
     });
 
     GM_registerMenuCommand('⚙️ 设置', () => {
         // 创建设置弹窗
         const settingsBox = document.createElement('div');
-        settingsBox.style.position = 'fixed';
-        settingsBox.style.top = '50%';
-        settingsBox.style.left = '50%';
-        settingsBox.style.transform = 'translate(-50%, -50%)';
-        settingsBox.style.width = '300px';
-        settingsBox.style.height = '150px';
-        settingsBox.style.backgroundColor = 'white';
-        settingsBox.style.border = '1px solid #ccc';
-        settingsBox.style.zIndex = '10000';
-        settingsBox.style.padding = '20px';
-        settingsBox.style.boxShadow = '5px 5px 10px rgba(0, 0, 0, 0.3)';
-        settingsBox.style.borderRadius = '5px';
-        settingsBox.style.fontFamily = 'Arial, sans-serif';
+        settingsBox.innerHTML = `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background-color: #ffffff; border: 1px solid #ddd; z-index: 10000; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); border-radius: 12px; font-family: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif';">
+                <div style="margin: 0 0 20px 0;">
+                    <label style="margin-right: 10px; display: flex; align-items: center; font-size: 18px;">
+                        <input type="checkbox" id="hideButtonsCheckbox" style="margin-right: 10px;" ${GM_getValue('hideButtons', false) ? 'checked' : ''}>
+                        <span style="margin-left: 10px;">隐藏悬浮按钮</span>
+                    </label>
+                </div>
+                <ol style="margin: 0 0 20px 0; padding-left: 20px; list-style-type: decimal;">
+                    <li style="margin-bottom: 10px;">第一次在某个网页使用批量打开功能时，需要手动关闭网页的阻止弹窗。</li>
+                    <li style="margin-bottom: 10px;">按住 Ctrl 键并点击多个链接以多选链接。</li>
+                    <li style="margin-bottom: 10px;">按住 Shift 键并点击链接以选择范围内的链接。</li>
+                    <li style="margin-bottom: 10px;">当选择有链接时，再次点击任意一条链接即可全部打开。点击空白处即可取消选择全部链接。</li>
+                    <li style="margin-bottom: 10px;">链接选择的逻辑参照 Windows 文件管理器。</li>
+                </ol>
+                <p style="margin-bottom: 10px; color: #555;">作者: 黄萌萌可爱多</p>
+                <p style="margin-bottom: 10px; color: #555;">版本: 1.0</p>
+                <button style="position: absolute; top: 10px; right: 10px; padding: 8px 16px; background-color: #f44336; color: white; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);" onclick="document.body.removeChild(this.parentElement.parentElement)">关闭</button>
+            </div>
+        `;
 
-        // 添加设置内容
-        const settingsContent = document.createElement('div');
-        settingsContent.style.margin = '0 0 10px 0';
-
-        // 添加“隐藏悬浮按钮”文本和开关
-        const hideButtonsLabel = document.createElement('label');
-        hideButtonsLabel.textContent = '隐藏悬浮按钮';
-        hideButtonsLabel.style.marginRight = '10px';
-
-        const hideButtonsSwitch = document.createElement('input');
-        hideButtonsSwitch.type = 'checkbox';
-        hideButtonsSwitch.checked = GM_getValue('hideButtons', false);
-        hideButtonsSwitch.addEventListener('change', () => {
-            GM_setValue('hideButtons', hideButtonsSwitch.checked);
+        // 添加事件监听器
+        const hideButtonsCheckbox = settingsBox.querySelector('#hideButtonsCheckbox');
+        hideButtonsCheckbox.addEventListener('change', () => {
+            GM_setValue('hideButtons', hideButtonsCheckbox.checked);
+            openButton.style.display = hideButtonsCheckbox.checked ? 'none' : 'block';
+            clearButton.style.display = hideButtonsCheckbox.checked ? 'none' : 'block';
         });
-
-        settingsContent.appendChild(hideButtonsLabel);
-        settingsContent.appendChild(hideButtonsSwitch);
-
-        // 添加关闭按钮
-        const closeButton = document.createElement('button');
-        closeButton.textContent = '关闭';
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
-        closeButton.style.padding = '5px 10px';
-        closeButton.style.backgroundColor = '#f44336';
-        closeButton.style.color = 'white';
-        closeButton.style.border = 'none';
-        closeButton.style.borderRadius = '3px';
-        closeButton.style.cursor = 'pointer';
-        closeButton.style.boxShadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
-        closeButton.addEventListener('click', function() {
-            document.body.removeChild(settingsBox);
-        });
-
-        // 将内容和关闭按钮添加到设置弹窗
-        settingsBox.appendChild(settingsContent);
-        settingsBox.appendChild(closeButton);
 
         // 将设置弹窗添加到页面
         document.body.appendChild(settingsBox);
