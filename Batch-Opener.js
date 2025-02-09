@@ -44,7 +44,7 @@
             const containsBlacklistWord = blacklist.some(word => linkText.includes(word));
 
             // 如果满足以下条件之一，则不选择该链接并应用屏蔽样式
-            if (isTimeFormat || isPureNumericOrAlphanumeric || isShortText || containsBlacklistWord) {
+            if ((isTimeFormat || isPureNumericOrAlphanumeric || isShortText || containsBlacklistWord) && (event.ctrlKey || event.shiftKey)) {
                 this.classList.add('blacklisted'); // 添加屏蔽样式
                 setTimeout(() => this.classList.remove('blacklisted'), 200); // 闪2次
                 setTimeout(() => this.classList.add('blacklisted'), 400);
