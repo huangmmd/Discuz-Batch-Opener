@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛帖子批量选择小助手
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.5.2
 // @description  在任何网页中多选帖子并批量打开，支持屏蔽词功能
 // @author       黄萌萌可爱多
 // @match        *://*/*
@@ -28,6 +28,9 @@
     // 获取所有可点击的链接元素
     const clickableLinks = Array.from(document.querySelectorAll('a[href]'));
 
+    // 检查是否需要隐藏悬浮按钮
+    const hideButtons = GM_getValue('hideButtons', false);
+
     // 添加点击事件监听
     clickableLinks.forEach((link, index) => {
         link.addEventListener('click', function(event) {
@@ -38,9 +41,9 @@
             const isTimeFormat = /^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}$/.test(linkText);
             // 检查是否为纯数字、纯英文或数字加英文（可以包含符号，但不包含中文字符）
             const isPureNumericOrAlphanumeric = /^[a-zA-Z0-9\s\p{P}]*$/.test(linkText) && !/[\u4e00-\u9fa5]/u.test(linkText);
-            // 检查文本长度是否少于个10字符
-            const isShortText = linkText.length < 10; // 修改为不少于10字符
-            // 修改为确保链接文本不包含任何一个屏蔽词
+            // 检查文本长度是否少于10个字符
+            const isShortText = linkText.length < 10;
+            // 检查链接文本是否包含任何一个屏蔽词
             const containsBlacklistWord = blacklist.some(word => linkText.includes(word));
 
             // 如果满足以下条件之一，则不选择该链接并应用屏蔽样式
@@ -182,9 +185,11 @@
         lastSelectedIndex = -1; // 重置最后一次选中的链接索引
     });
 
-    // 将按钮添加到页面
-    document.body.appendChild(openButton);
-    document.body.appendChild(clearButton);
+    // 根据设置决定是否显示悬浮按钮
+    if (!hideButtons) {
+        document.body.appendChild(openButton);
+        document.body.appendChild(clearButton);
+    }
 
     // 添加选中样式
     const style = document.createElement('style');
@@ -228,7 +233,7 @@
                     <li style="margin-bottom: 10px;">链接选择的逻辑参照 Windows 文件管理器。</li>
                 </ol>
                 <p style="margin-bottom: 10px; color: #555;">作者: 黄萌萌可爱多</p>
-                <p style="margin-bottom: 10px; color: #555;">版本: 1.5.1</p>
+                <p style="margin-bottom: 10px; color: #555;">版本: 1.5.2</p>
                 <button style="position: absolute; top: 10px; right: 10px; padding: 8px 16px; background-color: #f44336; color: white; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);" onclick="this.parentElement.parentElement.remove()">关闭</button>
             </div>
         `;
@@ -237,8 +242,14 @@
         const hideButtonsCheckbox = settingsBox.querySelector('#hideButtonsCheckbox');
         hideButtonsCheckbox.addEventListener('change', () => {
             GM_setValue('hideButtons', hideButtonsCheckbox.checked);
-            openButton.style.display = hideButtonsCheckbox.checked ? 'none' : 'block';
-            clearButton.style.display = hideButtonsCheckbox.checked ? 'none' : 'block';
+            // 根据设置动态显示或隐藏按钮
+            if (hideButtonsCheckbox.checked) {
+                openButton.style.display = 'none';
+                clearButton.style.display = 'none';
+            } else {
+                openButton.style.display = 'block';
+                clearButton.style.display = 'block';
+            }
         });
 
         const saveBlacklistButton = settingsBox.querySelector('#saveBlacklistButton');
@@ -253,5 +264,4 @@
         // 将设置弹窗添加到页面
         document.body.appendChild(settingsBox);
     });
-
 })();
