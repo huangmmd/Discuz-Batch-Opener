@@ -28,6 +28,23 @@
     // 获取所有可点击的链接元素
     const clickableLinks = Array.from(document.querySelectorAll('a[href]'));
 
+    // 创建已选择链接数量显示元素
+    const selectedCountDisplay = document.createElement('div');
+    selectedCountDisplay.style.position = 'fixed';
+    selectedCountDisplay.style.top = '10px';
+    selectedCountDisplay.style.right = '200px'; // 调整位置以避免与按钮重叠
+    selectedCountDisplay.style.zIndex = '9999';
+    selectedCountDisplay.style.padding = '10px 20px';
+    selectedCountDisplay.style.backgroundColor = '#333';
+    selectedCountDisplay.style.color = 'white';
+    selectedCountDisplay.style.borderRadius = '5px';
+    selectedCountDisplay.textContent = '已选择的链接：0'; // 初始化显示
+
+    // 更新选中链接数量显示的函数
+    function updateSelectedCountDisplay() {
+        selectedCountDisplay.textContent = `已选择的链接：${selectedPosts.length}`;
+    }
+
     // 添加点击事件监听
     clickableLinks.forEach((link, index) => {
         link.addEventListener('click', function(event) {
@@ -117,6 +134,10 @@
                     }
                 }
             }
+
+            // 更新选中链接数量显示
+            updateSelectedCountDisplay();
+
         });
     });
 
@@ -129,6 +150,10 @@
             clickableLinks.forEach(link => link.classList.remove('selected'));
             firstSelectedIndex = -1; // 重置第一次选中的链接索引
             lastSelectedIndex = -1; // 重置最后一次选中的链接索引
+
+            // 更新选中链接数量显示
+            updateSelectedCountDisplay();
+
         }
     });
 
@@ -157,6 +182,10 @@
         firstSelectedIndex = -1; // 重置第一次选中的链接索引
         lastSelectedIndex = -1; // 重置最后一次选中的链接索引
         window.focus(); // 确保当前窗口保持焦点
+
+        // 更新选中链接数量显示
+        updateSelectedCountDisplay();
+
     });
 
     // 创建清除选择按钮
@@ -180,11 +209,18 @@
         clickableLinks.forEach(link => link.classList.remove('selected'));
         firstSelectedIndex = -1; // 重置第一次选中的链接索引
         lastSelectedIndex = -1; // 重置最后一次选中的链接索引
+
+        // 更新选中链接数量显示
+        updateSelectedCountDisplay();
+
     });
 
     // 将按钮添加到页面
     document.body.appendChild(openButton);
     document.body.appendChild(clearButton);
+
+    // 将已选择链接数量显示元素添加到页面
+    document.body.appendChild(selectedCountDisplay);
 
     // 添加选中样式
     const style = document.createElement('style');
