@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛帖子批量选择小助手
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.5.4
 // @description  在任何网页中多选帖子并批量打开，支持屏蔽词功能
 // @author       黄萌萌可爱多
 // @match        *://*/*
@@ -275,6 +275,7 @@
             GM_setValue('hideButtons', hideButtonsCheckbox.checked);
             openButton.style.display = hideButtonsCheckbox.checked ? 'none' : 'block';
             clearButton.style.display = hideButtonsCheckbox.checked ? 'none' : 'block';
+            selectedCountDisplay.style.display = hideButtonsCheckbox.checked ? 'none' : 'block'; // 同步隐藏或显示“已选择的链接”数量显示元素
         });
 
         const saveBlacklistButton = settingsBox.querySelector('#saveBlacklistButton');
@@ -289,5 +290,13 @@
         // 将设置弹窗添加到页面
         document.body.appendChild(settingsBox);
     });
+
+    // 检查并应用隐藏按钮的设置
+    const hideButtons = GM_getValue('hideButtons', false);
+    if (hideButtons) {
+        openButton.style.display = 'none';
+        clearButton.style.display = 'none';
+        selectedCountDisplay.style.display = 'none'; // 同步隐藏“已选择的链接”数量显示元素
+    }
 
 })();
